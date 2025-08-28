@@ -33,16 +33,16 @@ if (mysqli_num_rows($studentCheck) > 0) {
     $isStudent = true;
 }
 
-// Prepare options
+// Prepare options (label => file)
 $options = [];
 if ($isStudent) {
-    $options[] = "Messages";
-    $options[] = "Notifications";
-    $options[] = "Event Registration";
-    $options[] = "Lost and Found";
+    $options["Messages"] = "messages.php";
+    $options["Notifications"] = "notifications.php";
+    $options["Event Registration"] = "eventregistration.php";
+    $options["Lost and Found"] = "lostandfound.php";
 }
 if ($isAdmin) {
-    $options[] = "Create Event";
+    $options["Create Event"] = "createevent.php";
 }
 ?>
 
@@ -52,15 +52,15 @@ if ($isAdmin) {
     <title>User Dashboard</title>
 </head>
 <body>
-    <h2>Welcome, <?php echo $name; ?>!</h2>
+    <h2>Welcome, <?php echo htmlspecialchars($name); ?>!</h2>
     <h3>Your options:</h3>
-    <ul>
-        <?php
-        foreach ($options as $option) {
-            echo "<li>$option</li>";
-        }
-        ?>
-    </ul>
+
+    <?php
+    foreach ($options as $label => $file) {
+        echo "<p><a href='$file'>$label</a></p>";
+    }
+    ?>
+
     <br>
     <!-- Logout link triggers the same page with ?logout=true -->
     <a href="user.php?logout=true">Logout</a>
