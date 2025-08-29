@@ -41,8 +41,26 @@ $update->close();
 // ---------------------
 // Handle new message
 // ---------------------
+// define a secret key (keep this safe, ideally outside repo/env var)
+define("SECRET_KEY", "your-32-char-secret-key-here"); 
+define("SECRET_IV", "your-16-char-iv-here"); 
+define("CIPHER_METHOD", "AES-256-CBC");
+
+function encryptMessage($message) {
+    $key = hash('sha256', SECRET_KEY);
+    $iv = substr(hash('sha256', SECRET_IV), 0, 16);
+    return openssl_encrypt($message, CIPHER_METHOD, $key, 0, $iv);
+}
+
+function decryptMessage($encrypted) {
+    $key = hash('sha256', SECRET_KEY);
+    $iv = substr(hash('sha256', SECRET_IV), 0, 16);
+    return openssl_decrypt($encrypted, CIPHER_METHOD, $key, 0, $iv);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_text'])) {
     $message_text = trim($_POST['message_text']);
+    $message_text = encryptMessage($message_text);
     if ($message_text !== "") {
         $stmt = $connection->prepare("INSERT INTO messages (sender_id, receiver_id, message_text) VALUES (?, ?, ?)");
         $stmt->bind_param("iis", $my_id, $other_id, $message_text);
@@ -100,13 +118,14 @@ $stmt->close();
             <?php foreach ($messages as $m): ?>
                 <p>
                     <strong><?php echo htmlspecialchars($m['sender_name']); ?>:</strong>
-                    <?php echo htmlspecialchars($m['message_text']); ?>
+                    <?php echo htmlspecialchars(decryptMessage($m['message_text'])); ?>
                     <br>
                     <small><?php echo $m['sent_at']; ?></small>
                 </p>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+
 
     <hr>
 

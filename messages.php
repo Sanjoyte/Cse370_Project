@@ -13,10 +13,21 @@ $my_id = $_SESSION['user_id'];
 // ---------------------
 // Handle new message
 // ---------------------
+// define a secret key (keep this safe, ideally outside repo/env var)
+define("SECRET_KEY", "your-32-char-secret-key-here"); 
+define("SECRET_IV", "your-16-char-iv-here"); 
+define("CIPHER_METHOD", "AES-256-CBC");
+
+function encryptMessage($message) {
+    $key = hash('sha256', SECRET_KEY);
+    $iv = substr(hash('sha256', SECRET_IV), 0, 16);
+    return openssl_encrypt($message, CIPHER_METHOD, $key, 0, $iv);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST['message_text'])) {
     $receiver_id = intval($_POST['receiver_id']);
     $message_text = trim($_POST['message_text']);
-
+    $message_text = encryptMessage($message_text);
     if ($receiver_id > 0 && $message_text !== "") {
         $stmt = $connection->prepare("INSERT INTO messages (sender_id, receiver_id, message_text) VALUES (?, ?, ?)");
         $stmt->bind_param("iis", $my_id, $receiver_id, $message_text);
