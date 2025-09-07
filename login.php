@@ -1,5 +1,5 @@
 <?php
-session_start(); // ADD THIS AT THE VERY TOP
+session_start(); 
 require 'connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
