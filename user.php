@@ -2,15 +2,15 @@
 session_start();
 require 'connection.php';
 
-// If logout is requested
+
 if (isset($_GET['logout'])) {
     session_unset();
     session_destroy();
-    header("Location: homepage.php"); // redirect to homepage
+    header("Location: homepage.php"); 
     exit();
 }
 
-// Check if user is logged in
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -19,7 +19,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $name    = $_SESSION['name'];
 
-// Determine roles
+
 $isAdmin = false;
 $isStudent = false;
 
@@ -33,7 +33,7 @@ if (mysqli_num_rows($studentCheck) > 0) {
     $isStudent = true;
 }
 
-// Prepare options (label => file)
+
 $options = [];
 if ($isStudent) {
     $options["Messages"] = "messages.php";
@@ -62,7 +62,7 @@ if ($isAdmin) {
     ?>
 
     <br>
-    <!-- Logout link triggers the same page with ?logout=true -->
+ 
     <a href="user.php?logout=true">Logout</a>
 </body>
 </html>

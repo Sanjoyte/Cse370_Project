@@ -13,13 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $row = mysqli_fetch_assoc($result);
 
         if (password_verify($password, $row['password'])) {
-            // start session and store user info
+           
             $_SESSION['user_id'] = $row['user_id'];
             $_SESSION['name']    = $row['name'];
 
-            // redirect to user.php
+            
             header("Location: user.php");
-            exit(); // stop executing the rest of the script
+            exit(); 
         } else {
             echo "Invalid password.";
         }

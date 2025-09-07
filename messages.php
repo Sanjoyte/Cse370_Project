@@ -77,7 +77,7 @@ $stmt->close();
 <body>
     <h2>Messages</h2>
 
-    <!-- Create New Message -->
+
     <h3>Create Message</h3>
     <form method="POST" action="messages.php">
         <label for="receiver_id">Receiver User ID:</label>
@@ -90,7 +90,6 @@ $stmt->close();
 
     <hr>
 
-    <!-- Conversation List -->
     <h3>Your Conversations</h3>
     <?php if (empty($conversations)): ?>
         <p>No conversations yet.</p>

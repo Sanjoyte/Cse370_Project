@@ -8,14 +8,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $role     = $_POST['role'];
 
-    // hash password
+    
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     $sql = "INSERT INTO user (user_id, name, email, password) 
             VALUES ('$user_id', '$name', '$email', '$hashed_password')";
 
     if (mysqli_query($connection, $sql)) {
-        // assign role
+        
         if ($role == "student") {
             mysqli_query($connection, "INSERT INTO student (user_id) VALUES ('$user_id')");
         } elseif ($role == "both") {

@@ -26,9 +26,7 @@ if (!$stmt->fetch()) {
 }
 $stmt->close();
 
-// ---------------------
-// Mark unread messages as seen
-// ---------------------
+
 $update = $connection->prepare("
     UPDATE messages
     SET seen = 1
@@ -38,10 +36,7 @@ $update->bind_param("ii", $other_id, $my_id);
 $update->execute();
 $update->close();
 
-// ---------------------
-// Handle new message
-// ---------------------
-// define a secret key (keep this safe, ideally outside repo/env var)
+
 define("SECRET_KEY", "your-32-char-secret-key-here"); 
 define("SECRET_IV", "your-16-char-iv-here"); 
 define("CIPHER_METHOD", "AES-256-CBC");
@@ -71,9 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_text'])) {
     exit();
 }
 
-// ---------------------
-// Get conversation messages
-// ---------------------
+
 $sql = "
 SELECT 
     m.message_id,
